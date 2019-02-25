@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: Fedora | installing open-vm-tools
+      apt: name=open-vm-tools state=present
+      when: ansible_os_family == "Fedora" and ansible_virtualization_type == "VMware"
+
+    - name: centos | installing open-vm-tools if a vm
+      yum: name=open-vm-tools state=present
+      when: ansible_os_family == "RedHat" and ansible_virtualization_type == "VMware"
+
+    - name: centos | starting and enabling open-vm-tools
+      service: name=vmtoolsd.service state=restarted enabled=yes
+      when: ansible_os_family == "RedHat" and ansible_virtualization_type == "VMware"
